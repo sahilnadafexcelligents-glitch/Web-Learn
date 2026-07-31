@@ -1,1 +1,0 @@
-The seven stages of web development are planning, design, content creation, coding, testing, deployment, and maintenance. Each phase moves a project from a basic idea to a fully functional online presence. 
