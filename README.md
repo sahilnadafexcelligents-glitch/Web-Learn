@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 𝗛𝘆𝗽𝗲𝗿-𝗧𝗮𝗿𝗴𝗲𝘁𝗲𝗱 𝗔𝗕𝗠 𝗦𝘁𝗮𝗿𝘁𝘀 𝗪𝗶𝘁𝗵 𝗦𝗺𝗮𝗿𝘁𝗲𝗿 𝗗𝗮𝘁𝗮.
 
 A list of target accounts isn't enough.
@@ -20,3 +21,6 @@ Because successful ABM isn't about targeting everyone.
 It's about targeting the right accounts at the right time.
 
 #AccountBasedMarketing #ABM #IntentData #FirmographicData #B2BMarketing #DemandGeneration #LeadGeneration #SalesStrategy #DataDriven #BusinessGrowth
+=======
+Learn web dev
+>>>>>>> 263ea0f19a5f3cffb94d6deb141ee9f6d50d0385
