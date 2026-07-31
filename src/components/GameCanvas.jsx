@@ -6,17 +6,17 @@ import { soundEngine } from '../utils/soundEngine';
 export const GameCanvas = ({
   gameState,
   setGameState,
-  score,
   setScore,
   highScore,
   setHighScore,
-  lives,
   setLives,
   level,
-  setLevel,
   onDirectionChangeRef
 }) => {
   const canvasRef = useRef(null);
+  const gameStateRef = useRef(gameState);
+  const levelRef = useRef(level);
+  const highScoreRef = useRef(highScore);
 
   // Mutable Game References
   const gameRef = useRef({
@@ -31,10 +31,15 @@ export const GameCanvas = ({
     animFrameId: null
   });
 
+  // Keep the animation loop stable while React state changes.
+  useEffect(() => { gameStateRef.current = gameState; }, [gameState]);
+  useEffect(() => { levelRef.current = level; }, [level]);
+  useEffect(() => { highScoreRef.current = highScore; }, [highScore]);
+
   // Expose direction change method via ref
   useEffect(() => {
     onDirectionChangeRef.current = (dir) => {
-      if (gameState === 'PLAYING') {
+      if (gameStateRef.current === 'PLAYING') {
         gameRef.current.pacman.setNextDirection(dir);
       }
     };
@@ -67,7 +72,7 @@ export const GameCanvas = ({
 
   // Trigger level reset on level/game start
   useEffect(() => {
-    if (gameState === 'START') {
+    if (gameState === 'START' || gameState === 'COUNTDOWN') {
       resetMapAndEntities();
     }
   }, [gameState]);
@@ -77,6 +82,7 @@ export const GameCanvas = ({
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    const game = gameRef.current;
 
     const handleKeyDown = (e) => {
       soundEngine.init();
@@ -86,7 +92,7 @@ export const GameCanvas = ({
         return;
       }
 
-      if (gameState !== 'PLAYING') return;
+      if (gameStateRef.current !== 'PLAYING') return;
 
       switch (e.key) {
         case 'ArrowUp':
@@ -131,7 +137,7 @@ export const GameCanvas = ({
     };
 
     const handleTouchEnd = (e) => {
-      if (gameState !== 'PLAYING') return;
+      if (gameStateRef.current !== 'PLAYING') return;
       const touchEndX = e.changedTouches[0].clientX;
       const touchEndY = e.changedTouches[0].clientY;
 
@@ -199,7 +205,7 @@ export const GameCanvas = ({
     };
 
     const updateFrame = () => {
-      if (gameState === 'PLAYING') {
+      if (gameStateRef.current === 'PLAYING') {
         const g = gameRef.current;
 
         // Pacman Update
@@ -217,7 +223,7 @@ export const GameCanvas = ({
             soundEngine.playDotSound();
             setScore(prev => {
               const next = prev + CONFIG.DOT_PTS;
-              if (next > highScore) setHighScore(next);
+              if (next > highScoreRef.current) { highScoreRef.current = next; setHighScore(next); }
               return next;
             });
           } else if (tile === 3) {
@@ -228,7 +234,7 @@ export const GameCanvas = ({
             g.ghosts.forEach(ghost => ghost.makeFrightened());
             setScore(prev => {
               const next = prev + CONFIG.POWER_PELLET_PTS;
-              if (next > highScore) setHighScore(next);
+              if (next > highScoreRef.current) { highScoreRef.current = next; setHighScore(next); }
               return next;
             });
           }
@@ -251,7 +257,7 @@ export const GameCanvas = ({
         // Ghosts Update & Collision
         const blinky = g.ghosts.find(ghost => ghost.name === 'blinky');
         g.ghosts.forEach(ghost => {
-          ghost.update(g.pacman, blinky, g.map, { level, ghostMode: g.ghostMode });
+          ghost.update(g.pacman, blinky, g.map, { level: levelRef.current, ghostMode: g.ghostMode });
 
           const dist = Math.hypot(g.pacman.x - ghost.x, g.pacman.y - ghost.y);
           if (dist < CONFIG.TILE_SIZE * 0.75) {
@@ -265,7 +271,7 @@ export const GameCanvas = ({
 
               setScore(prev => {
                 const next = prev + pts;
-                if (next > highScore) setHighScore(next);
+                if (next > highScoreRef.current) { highScoreRef.current = next; setHighScore(next); }
                 return next;
               });
             } else if (ghost.state !== 'EATEN') {
@@ -308,11 +314,11 @@ export const GameCanvas = ({
       window.removeEventListener('keydown', handleKeyDown);
       canvas.removeEventListener('touchstart', handleTouchStart);
       canvas.removeEventListener('touchend', handleTouchEnd);
-      if (gameRef.current.animFrameId) {
-        cancelAnimationFrame(gameRef.current.animFrameId);
+      if (game.animFrameId) {
+        cancelAnimationFrame(game.animFrameId);
       }
     };
-  }, [gameState, level, setScore, setHighScore, setLives, setGameState, highScore]);
+  }, [setScore, setHighScore, setLives, setGameState]);
 
   return (
     <canvas
