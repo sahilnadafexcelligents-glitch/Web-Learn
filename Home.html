@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <body>
+    <style>
+      
+
+      h1 {
+        text-align: center;
+        color: brown;
+        font-size: 40px;
+        font-weight: 400;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+        width: 300px;
+        height: auto;
+        border-radius: 10%;
+        border-color: aqua;
+      }
+      .container {
+        display: flex;
+        justify-content: center; /* Centers horizontally */
+        /* align-items: center;   Uncomment to center vertically as well if the container has height */
+      }
+
+      .button {
+        margin-top: 80px;
+        padding: 10px 20px; /* Cleaned up duplicate padding */
+        background-color: red;
+        font-size: 16px;
+        font-weight: 600;
+        color: white;
+        border-radius: 10px;
+        border: none; /* Removes default button border */
+        cursor: pointer; /* Changes mouse to a pointer on hover */
+      }
+      .dashed-divider {
+        border: none;
+        border-top: 2px dashed #000;
+        margin: 20px 0;
+      }
+    </style>
+    <h1 class="h1">JavaScript</h1>
+    <hr class="dashed-divider" />
+    <img
+      class="img"
+      src="2026-Mercedes-AMG-F1-W17-E-Performance-001-1080.jpg"
+    />
+
+    <div class="container">
+      <button class="button">Click Me</button>
+    </div>
+  </body>
+</html>
